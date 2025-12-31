@@ -74,8 +74,8 @@ def update(sn):
         activity=request.form.get("activity")
         about=request.form.get("description")
         updater=Flask_TO_Do.query.filter_by(sn=sn,user_email=session.get("email")).first()
-        updater.activity=activity#type:ignore
-        updater.description=about#type:ignore
+        updater.activity=activity if len(activity)>0 else "None"#type:ignore
+        updater.description=about if len(about)>0 else "None"#type:ignore
         data_base.session.commit()
         return redirect("/")
     show_val=Flask_TO_Do.query.filter_by(sn=sn,user_email=session.get("email")).first()
