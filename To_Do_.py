@@ -98,4 +98,4 @@ if __name__=="__main__":
     with app.app_context():
         data_base.create_all()
     ported=int(os.environ.get("PORT",2031))
-    app.run(debug=False,port=port)
+    app.run(debug=False,port=ported)
