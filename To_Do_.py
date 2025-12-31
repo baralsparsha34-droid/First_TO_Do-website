@@ -1,6 +1,7 @@
 from flask import Flask,render_template,request,redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
+import os
 # import webbrowser as weber
 app=Flask(__name__)
 app.secret_key="DO_IT_2031"
@@ -96,4 +97,5 @@ def completed():
 if __name__=="__main__":
     with app.app_context():
         data_base.create_all()
-    app.run(debug=False,port=2031)
+    ported=int(os.environ.get("PORT",2031))
+    app.run(debug=False,port=port)
