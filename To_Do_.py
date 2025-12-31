@@ -1,12 +1,35 @@
-from flask import Flask,render_template,request,redirect
+from flask import Flask,render_template,request,redirect,session
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
+import bcrypt as bt
 from datetime import date
+import os
 # import webbrowser as weber
 app=Flask(__name__)
 app.secret_key="DO_IT_2031"
 app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///Flask_Storage.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
 data_base=SQLAlchemy(app)#(db)=data_base
+#Setup Login Manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"#type:ignore
+@login_manager.user_loader
+def load_user(user_id):
+    return Costumer_Data.query.get(int(user_id))
+class Costumer_Data(data_base.Model,UserMixin):
+    sn=data_base.Column(data_base.Integer,primary_key=True)
+    email = data_base.Column(data_base.String(150), unique=True, nullable=False)
+    username = data_base.Column(data_base.String(150), unique=True, nullable=False)
+    password = data_base.Column(data_base.String(150), unique=True, nullable=False)
+    def __init__(self,email,username,password):
+        self.password=generate_password_hash(password)
+        self.username=username
+        self.email=email
+    def check_passkey(self,password)->bool :
+        return check_password_hash(self.password,password)
+
 class Flask_TO_Do_Completed(data_base.Model):
     sn=data_base.Column(data_base.Integer,primary_key=True)
     activity=data_base.Column(data_base.String(125),nullable=False)
@@ -21,7 +44,39 @@ class Flask_TO_Do(data_base.Model):
     created_time=data_base.Column(data_base.Date,default=date.today)
     def __repr__(self) -> str:
         return  "{0}-{1}-{2}".format(self.sn,self.activity,self.created_time)
+@app.route("/dashboard")
+def dashboard():
+    if session["user_name"]:
+        pass
+    return render_template("dashboard.html")
+@app.route("/sign_up",methods=["GET","POST"])
+def signup():
+    if request.method=="POST":
+        user_email_signup=request.form.get("user_email")
+        user_name_signup=request.form.get("user_identity")
+        user_password_signup=request.form.get("pass_key")
+        coustmer_signup=Costumer_Data(email=user_email_signup,username=user_name_signup,password=user_password_signup)#type:ignore
+        data_base.session.add(coustmer_signup)
+        data_base.session.commit()
+        return redirect("/login")
+    return render_template("sing_up.html")
+@app.route("/login",methods=["GET","POST"])
+def login():
+    if request.method=="POST":
+        user_email_login=request.form.get("user_email")
+        user_name_login=request.form.get("user_identity")
+        user_password_login=request.form.get("pass_key")
+        coustmer_login=Costumer_Data.query.filter_by(email=user_email_login).first()
+        if coustmer_login and coustmer_login.check_passkey(user_password_login):
+            session["user_name"]=user_name_login
+            session["user_password"]=user_password_login
+            session["user_email"]=user_email_login
+            return redirect("/dashboard")
+        else:
+            return render_template("login.html",error="Incorrect Password or Username")
+    return render_template("login.html")
 @app.route("/",methods=["GET","POST"])
+@login_required
 def welcome():
     #Creating logic to save show data in the table from html nad saving in database:
     if request.method=="POST":
@@ -36,55 +91,43 @@ def welcome():
             about=about
         else:
             about="None"
-        task=Flask_TO_Do(activity=title,description=about) # type: ignore
-        data_base.session.add(task)
-        data_base.session.commit()
         return redirect("/")
-    total_task=Flask_TO_Do.query.all()
-    return render_template("index.html",total_task=total_task)
+    return render_template("index.html")
 #Route for another web.
-@app.route("/services")
-def services():
-    return"It's a place to provide you services"
 #App route and delete function.
 @app.route("/Delete/<int:sn>")
+@login_required
 def delete(sn):
     deleter=data_base.session.get(Flask_TO_Do,sn)
     data_base.session.delete(deleter)
-    task3=Flask_TO_Do_Completed(activity=deleter.activity,description=deleter.description) # type: ignore
-    data_base.session.add(task3)
-    data_base.session.commit()
-    data_base.session.commit()
     return redirect("/")
 @app.route("/Update/<int:sn>",methods=["GET","POST"])
+@login_required
 def update(sn):
     if request.method=="POST":
         title=request.form["title"]
         about=request.form["description"]
-        update=Flask_TO_Do.query.filter_by(sn=sn).first()
-        update.activity=title #type: ignore
-        update.description=about  #type: ignore
-        data_base.session.commit()
         return redirect("/")
-    show_val=Flask_TO_Do.query.filter_by(sn=sn).first()
-    return render_template("update.html",update=show_val)
+    return render_template("update.html")
 @app.route("/delete_all")
+@login_required
 def delete_all():
     with app.app_context():
         data_base.drop_all()
         data_base.create_all()
     return redirect("/")
 @app.route("/about")
+@login_required
 def about():
     return render_template("about.html")
 @app.route("/activity")
+@login_required
 def activity():
-    total_task2=Flask_TO_Do.query.all()
-    return render_template("activity.html",total_task2=total_task2)
+    return render_template("activity.html")
 @app.route("/completed")
+@login_required
 def completed():
-    total_task3=Flask_TO_Do_Completed.query.all()
-    return render_template("completed.html",total_task3=total_task3)
+    return render_template("completed.html")
 # @app.route("/search",methods=["GET","POST"])
 # def web_source():
 #     if request.method=="POST":
@@ -93,7 +136,8 @@ def completed():
 #     return redirect("/")
 #App route and sort function
 #Executing in only this file
-if __name__=="__main__":
-    with app.app_context():
+with app.app_context():
         data_base.create_all()
-    app.run(debug=False,port=2031)
+if __name__=="__main__":
+    ported=int(os.environ.get("PORT",2031))
+    app.run(debug=False,host='0.0.0.0',port=ported,)

@@ -1,0 +1,47 @@
+{% extends 'To_Do.html' %}
+{% block body %}
+    <main>
+    <section class="hearder_section">
+        <big><h1>Singup Now/Create<sup><u><i>Acccount:</i></u></sup></h1></big>
+        <hr>
+        <center>
+        <big><h2>Fill the required sections:  ↓</h2></big>
+        <br>
+        <form action="/sign_up" method="POST" class="Required_form">
+            <div class="email_div">
+                <big>
+                    <label for="user_name"><b><u>Email</u></b></label>
+                </big>
+                <p>
+                    <input type="email" id="user_name" name="user_email"  required size="40">
+                </p>
+            </div>
+            <div class="Username_div">
+                <big>
+                    <label for="user_name"><b><u>Username</u></b></label>
+                </big>
+                <p>
+                    <input type="text" id="user_name" name="user_identity"  required size="40">
+                </p>
+            </div>
+            <div class="Password_div">
+                <big>
+                    <label for="pass_word"><b><u>Password</u></b></label>
+                </big>
+                <p>
+                    <input type="password" id="pass_word" name="pass_key"  required size="40">
+                </p>
+            </div>
+            <br>
+            <b>
+                <button type="submit">Confirm</button>
+            </b>
+        </form>
+        <hr>
+        <div>
+            <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
+    </section>
+    </center>
+</main>
+{% endblock  %}
