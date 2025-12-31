@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block body %}
+  {% if total_delete|length==0 %}
+    <div class="alert alert-secondary" role="alert">
+        No To_Do_Activities_Deleted Upto Now,You can see your deleted activities here:
+    </div>
+  {% else %}
+    <caption><h2>Deleted_To_Do_List_Here:</h2></caption>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">S/N.</th>
+              <th scope="col">Tasks</th>
+              <th scope="col">Description</th>
+              <th scope="col">Time:</th>
+              <th scope="col">Delete&Undo Or Update</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for to_do_act in total_delete%}
+              <tr>
+                <th scope="row">{{loop.index}}</th>
+                <td>{{to_do_act.activity}}</td>
+                <td>{{to_do_act.description}}</td>
+                <td>{{to_do_act.created_time}}</td>
+              </tr>
+          </tbody>
+        </table>  
+        {% endfor %}
+  {%endif%}
+{% endblock body %}

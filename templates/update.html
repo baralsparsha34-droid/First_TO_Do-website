@@ -1,0 +1,49 @@
+{% extends 'To_DO.html' %}
+    {% block body %}
+    <header>
+      <h1 class="Welcome_div"><big class="Welcome_text">Modify It!</big></h1>
+      <nav class="Tod_Do_Nav">
+          <ul class="Board">
+            <li class="Board-items">
+              <h1><big><b>To_Do_List:</b></big></h1>
+            </li>
+            <li class="Board-items">
+              <h2><a href="/about" class="nav_link">About</a></h2>
+            </li>
+            <li class="Board-items">
+              <h2><a href="#" class="nav_link">Activities</a></h2>
+            </li>
+            <li class="Board-items" id="Completed">
+              <h2><a href="#" class="nav_link">Completed Activities</a></h2>
+            </li>
+          </ul>
+        </div>
+      </nav>  
+    </header>
+    <main>
+      <form action="/Update/{{update.sn}}" method="POST" class="Main_form">
+        <div class="Main_form_div">
+          <div class="Title_div">
+            <label for="title_input">
+            <h2 class="To_Do_ask"><big>To-Do-Activity</big></h2>
+            </label>
+            <input type="text" class="input" name="title" placeholder="Learn Programing upto 125 letters" id="title_input" value="{{ update.activity }}">
+            <h3 class="Gurantee"> We assure that We'll never share your Tasks/Acttivites with others:</h3>
+          </div>
+          <hr>
+          <br>
+          <div class="Description_div">
+            <label for="description_input">
+            <h2 class="To_Do_ask">Description of the Tasks/Activities</h2>
+            </label>
+            <input type="text" class="input" name="description" placeholder="Learn with joy! upto 250 letters" id="description_input" value="{{ update.description }}">
+          </div>
+          <div class="Checking-Submiting_div">
+            <input type="checkbox" name="to_do_checker" id="to_do_checker">
+            <label for="to_do_checker" id="to_do_checker-label">Checked</label>
+            <br>
+            <button type="submit" name="to_do_submiter" id="to_do_submiter">Update Activities</button>
+          </div>
+        </div>
+      </form>  
+{% endblock body %}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Activities(To_Do_App)</title>
+</head>
+<body>
+    <h1>Welcome To  Web:</h1>
+    <left>
+        <h2>These Are Your Activities:</h2>
+    {% if total_task2 | length == 0%}
+        <div class="Zero-div">
+          <h3>No Actvities to Show!Type your first Activity above:</h3>
+        </div>
+    {% else %}
+      <button type="button" id="to_do_delete_all"><a href="/delete_all">Delete all</a></button>
+      <div class="Data_div">
+        <table class="data_table" border="20">
+        <caption><h2>To_Do_List || Here:</h2></caption>
+        <thead>
+          <tr class="header_row">
+            <th scope="col"class="id_header">/.</th>
+            <th scope="col" class="long">Act:</th>
+            <th scope="col" class="long">Desc:</th>
+            <th scope="col">OPT:</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for data2 in total_task2 %}
+          <tr class="data_row">
+            <th scope="row">{{loop.index}}</th>
+            <td class="row_item">{{ data2.activity }}</td>
+           <td class="row_item">{{ data2.description }}</td>
+           <td class="row_item">
+            <a href="/Delete/{{data2.sn}}"><button class="table_options">X</button></a><a href="/Update/{{data2.sn}}"><button class="table_options">+</button></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+      </div>
+    </left>
+    <form>
+            <div class="main_web_todo">
+                <big><h3><a href="/">Back To To_Do:</a></h3></big>
+            </div>
+        </form>
+        <h3 class="Tribute">Made with 💪 and ❤️ of Nepal.</h3>
+</body>
+</html>
