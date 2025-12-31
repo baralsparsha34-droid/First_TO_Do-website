@@ -23,18 +23,22 @@ class Costumer_Data(data_base.Model,UserMixin):
     email = data_base.Column(data_base.String(150), unique=True, nullable=False)
     username = data_base.Column(data_base.String(150), unique=True, nullable=False)
     password = data_base.Column(data_base.String(150), unique=True, nullable=False)
+    tasks = data_base.relationship('Flask_TO_Do', backref='owner', lazy=True)
     def __init__(self,email,username,password):
         self.password=generate_password_hash(password)
         self.username=username
         self.email=email
     def check_passkey(self,password)->bool :
         return check_password_hash(self.password,password)
+    def get_id(self):
+        return str(self.sn)
 
 class Flask_TO_Do_Completed(data_base.Model):
     sn=data_base.Column(data_base.Integer,primary_key=True)
     activity=data_base.Column(data_base.String(125),nullable=False)
     description=data_base.Column(data_base.String(250),nullable=False)
     created_time=data_base.Column(data_base.Date,default=date.today)
+    user_id = data_base.Column(data_base.Integer, data_base.ForeignKey('costumer__data.sn'), nullable=False)
     def __repr__(self) -> str:
         return  "{0}-{1}-{2}".format(self.sn,self.activity,self.created_time)
 class Flask_TO_Do(data_base.Model):
@@ -42,13 +46,9 @@ class Flask_TO_Do(data_base.Model):
     activity=data_base.Column(data_base.String(125),nullable=False)
     description=data_base.Column(data_base.String(250),nullable=False)
     created_time=data_base.Column(data_base.Date,default=date.today)
+    user_id = data_base.Column(data_base.Integer, data_base.ForeignKey('costumer__data.sn'), nullable=False)
     def __repr__(self) -> str:
         return  "{0}-{1}-{2}".format(self.sn,self.activity,self.created_time)
-@app.route("/dashboard")
-def dashboard():
-    if session["user_name"]:
-        pass
-    return render_template("dashboard.html")
 @app.route("/sign_up",methods=["GET","POST"])
 def signup():
     if request.method=="POST":
@@ -64,14 +64,11 @@ def signup():
 def login():
     if request.method=="POST":
         user_email_login=request.form.get("user_email")
-        user_name_login=request.form.get("user_identity")
         user_password_login=request.form.get("pass_key")
         coustmer_login=Costumer_Data.query.filter_by(email=user_email_login).first()
         if coustmer_login and coustmer_login.check_passkey(user_password_login):
-            session["user_name"]=user_name_login
-            session["user_password"]=user_password_login
-            session["user_email"]=user_email_login
-            return redirect("/dashboard")
+            login_user(coustmer_login)
+            return redirect("/")
         else:
             return render_template("login.html",error="Incorrect Password or Username")
     return render_template("login.html")
@@ -91,8 +88,12 @@ def welcome():
             about=about
         else:
             about="None"
+        current_task=Flask_TO_Do(activity=title,description=about,user_id=current_user.sn)#type:ignore
+        data_base.session.add(current_task)
+        data_base.session.commit()
         return redirect("/")
-    return render_template("index.html")
+    total_task=Flask_TO_Do.query.filter_by(user_id=current_user.sn).all()
+    return render_template("index.html",total_task=total_task)
 #Route for another web.
 #App route and delete function.
 @app.route("/Delete/<int:sn>")
