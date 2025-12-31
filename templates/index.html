@@ -45,16 +45,17 @@
             <br>
             <button type="submit" name="to_do_submiter" id="to_do_submiter">Submit Activities</button>
           </div>
-        </div>
+          <a href="/logout"><button type="button" class="Confirm_auth" style="background-color:rgba(00,00,00,1) ;">Log_Out</button></a>
+        </div> 
       </form>
       <hr>
       <br>
-      <!-- {% if total_task | length == 0%}
+      <button type="button" id="to_do_delete_all"><a href="/delete_all">Delete all</a></button>
+      {% if total_task | length == 0%}
         <div class="Zero-div">
           <h3>No Actvities to Show!Type your first Activity above:</h3>
         </div>
       {% else %}
-      <button type="button" id="to_do_delete_all"><a href="/delete_all">Delete all</a></button>
       <div class="Data_div">
         <table class="data_table" border="20">
         <caption><h2>To_Do_List || Here:</h2></caption>
@@ -71,8 +72,8 @@
           {% for data in total_task %}
           <tr class="data_row">
             <th scope="row">{{loop.index}}</th>
-            <td class="row_item">{{ data.activity }}</td>
-           <td class="row_item">{{ data.description }}</td>
+            <td class="row_item"><div class="scroll">{{ data.activity }}</div></td>
+           <td class="row_item"><div class="scroll">{{ data.description }}</div></td>
            <td class="row_item">{{ data.created_time }}</td>
            <td class="row_item">
             <a href="/Delete/{{data.sn}}"><button class="table_options">X</button></a><a href="/Update/{{data.sn}}"><button class="table_options">+</button></a></td>
@@ -81,6 +82,6 @@
         </tbody>
       </table>
       </div>
-      {% endif %} -->
+      {% endif %}
     </main>
   {% endblock  %}       

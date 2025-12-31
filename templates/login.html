@@ -1,6 +1,14 @@
 {% extends 'To_Do.html' %}
 {% block body %}
     <main>
+        <style>
+            main{
+                background-image: none;
+            }
+            body{
+                background-image: url(/static/Authentication_img.jpg);
+            }
+        </style>
     <section class="hearder_section">
         <big><h1>Login to Your <sup><u><i>Acccount:</i></u></sup></h1></big>
         <hr>
@@ -8,33 +16,28 @@
         <big><h2>Fill the required sections:  ↓</h2></big>
         <br>
         <form action="/login" method="POST" class="Required_form">
-            <div class="email_div">
+            <div class="info_div">
                 <big>
                     <label for="useremail"><b><u>Email</u></b></label>
                 </big>
-                <p>
-                    <input type="email" id="useremail" name="user_email"  required size="40">
-                </p>
+                    <input type="email" id="useremail" name="user_email"  required class="auth_input">
             </div>
-            <div class="Username_div">
+            <div class="info_div">
                 <big>
                     <label for="user_name"><b><u>Username</u></b></label>
                 </big>
-                <p>
-                    <input type="text" id="user_name" name="user_identity"  required size="40">
-                </p>
+                    <input type="text" id="user_name" name="user_identity" autocomplete="off" class="auth_input" placeholder="Not essential">
             </div>
-            <div class="Password_div">
+            <div class="info_div">
                 <big>
                     <label for="pass_word"><b><u>Password</u></b></label>
                 </big>
-                <p>
-                    <input type="password" id="pass_word" name="pass_key"  required size="40">
-                </p>
+                    <input type="password" id="pass_word" name="pass_key"  required class="auth_input" >
             </div>
             <br>
+            <br>
             <b>
-                <button type="submit">Confirm</button>
+                <button type="submit" class="Confirm_auth">Confirm</button>
             </b>
         </form>
         <hr>

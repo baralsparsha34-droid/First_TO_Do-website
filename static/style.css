@@ -157,7 +157,7 @@ main{
 }
 .data_table{
     table-layout: fixed;
-    width: 85%;
+    width: 100%;
     height: auto;
     display: table;
     background-color: rgba(255,255,255,1);
@@ -178,7 +178,7 @@ th{
     white-space: nowrap;
 }
 .long{
-    width: 31%;
+    width: 33%;
 }
 .id_header{
     width: 5%;
@@ -259,6 +259,11 @@ th{
     font-size: 1em;
     margin-right:2px;
 }
+}
+@media (max-width:584px) {
+    .Data_div{
+        display: none;
+    }
 }
 @media (min-width:601px) {
     .Welcome_text{
@@ -357,4 +362,58 @@ h1{
     right: 0px;
     top: 10px;
     z-index: -1;
+}
+/* For authentication  */
+.Required_form{
+    height: 60vh;
+    width: 70vw;
+    border: 4px solid rgba(00,00,00,1);
+    box-sizing: border-box;
+    backdrop-filter: blur(60px);
+    border-radius: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.info_div{
+    height: calc(100%/3);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    font-weight: 900;
+    color: rgba(255,255,255,1);
+}
+.auth_input{
+    width: 70%;
+    height: 50%;
+    background-color: rgba(00,00,00,1);
+    color: rgba(255,255,255,1);
+    font-size: 25px;
+}
+.auth_input:hover{
+    border: 3px solid rgba(255, 255, 0,1);
+}
+.auth_input:active{
+    border: 3px solid rgba(255, 0, 0,1);
+}
+.Confirm_auth{
+    font-size: 2rem;
+    background-color: rgba(255, 255, 255, 0.291);
+    box-shadow: 5px 5px rgba(255,255,255,1);
+    transform: translateZ(10px);
+    align-self: self-end;
+    border-radius: 22px;
+    color: rgba(255,255,255,1);
+}
+.Confirm_auth:hover{
+    border: 5px solid rgba(255, 0, 0,1);
+}
+.scroll{
+    white-space: nowrap;
+    overflow-x: scroll;
+    max-width: 100%;
 }
