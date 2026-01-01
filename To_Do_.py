@@ -1,6 +1,4 @@
 from flask import Flask,render_template,request,redirect,session
-from flask_sqlalchemy import SQLAlchemy
-from datetime import date
 import os
 from models import Costumer_Data,Flask_TO_Do,Flask_TO_Do_Completed,data_base
 # import webbrowser as weber

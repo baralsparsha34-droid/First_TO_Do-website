@@ -2,12 +2,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import bcrypt as bt
 from datetime import date
+import os
 # import webbrowser as weber
 app=Flask(__name__)
 app.secret_key="DO_IT_2031"
 app.config["SQLALCHEMY_DATABASE_URI"]="sqlite:///Flask_Storage.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"]=False
 data_base=SQLAlchemy()#(db)=data_base
+data_base_url = os.environ.get('DATABASE_URL', 'sqlite:///Flask_Storage.db')
+if data_base_url.startswith("postgres://"):
+    database_url = data_base_url.replace("postgres://", "postgresql://", 1)
 class Costumer_Data(data_base.Model):
     sn=data_base.Column(data_base.Integer,primary_key=True)
     email = data_base.Column(data_base.String(150), unique=True, nullable=False)
