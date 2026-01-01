@@ -106,8 +106,8 @@ def completed():
 #     return redirect("/")
 #App route and sort function
 #Executing in only this file
+with app.app_context():
+    data_base.create_all()
 if __name__=="__main__":
-    with app.app_context():
-        data_base.create_all()
     ported=int(os.environ.get("PORT",2031))
     app.run(debug=False,host='0.0.0.0',port=ported,)
