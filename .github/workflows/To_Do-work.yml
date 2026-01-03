@@ -1,0 +1,14 @@
+name: Daily render ping
+
+on:
+  schedule:
+    - cron: '* * * * *'  # Runs daily AT ANY TIME
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  curl-website:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run cURL on Website
+        run: https://list-your-favor.onrender.com/
